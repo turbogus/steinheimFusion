@@ -1,0 +1,83 @@
+SURVIE:
+
+ajout de farming_plus (GIT master) --> !!!erreur de variable 
+ajout de mobs_redo (GIT master)
+ajout de 3D armor (GIT master)
+ajout de throwing (GIT last version) !!! remplaçé par la version de mon pack steinheimFusion
+
+DECORATION MAP:
+ajout de plant_life (GIT master) --> ok apres grosse suppression dans le modpack
+ajout de moretree (GIT master) --> attention, légère augmentation du lag
+ajout de ambiance "ultralite (lien direct) --> erreur de variable globale
+
+UTILITAIRE:
+ajout de cgmr (lien direct sur forum) --> erreur de variable
+ajout de domb (lien direct sur forum) --> erreur de variable
+ajout de inventory_plus (GIT master)
+ajout de hud (GIT v1.4)
+ajout de bed --> erreur de variable quand on clic sur le lit
+ajout de itemdrop (GIT master)
+ajout de bags (GIT master)
+ajout de player_textures (GIT master)
+ajout de antiguest (GIT master)
+ajout de lock (GIT master)
+ajout de memorandum (GIT master)
+ajout de itemframe (GIT master)
+ajout de money (GIT master) + locked chest (GIT master) --> erreur de variables globales à la mise en route
+ajout de boost_cart (GIT master)
+ajout de teleport (dossier steinheim) --> POUR TEST AVEC MAP STEINHEIM
+ajout de soccer (version Calinou, téléchargement direct)
+ajout de workbench (GIT master, inclu dans le pack du gamemod minitest)
+
+PLUS DE BLOCKS
+ajout de moreblocks (GIT derniere version)
+ajout de homedecor (GIT)
+ajout de arrow sign (githorious) --> pas d'erreur mais craft impossible...
+ajout de mesecons (GIT master)
+ajout de pipeworks (GIT master) --> ne semble plus fonctionner...
+ajout de moreores (githorious, telechargement master)
+ajout de bobblocks (GIT master)
+ajout de chessmastermod (version dans steinheim)
+ajout de fluide (version steinheim)
+ajout de give_flame (version steinheim)
+ajout de steel (GIT master) --> ok mais craft rentre en conflit avec les bottes en acier de 3d armor
+ajout de roof (version steinheim) --< depot GIT n'existe plus
+ajout de speedwall (version steinheim)
+
+
+IMPORTANT ! :
+
+retiré temporairement : 
+ambiance "ultralite" (attendre MaJ?) (erreur var global à chaque accès à un son)
+fireworks (attendre MaJ?) (erreur var globale)
+
+suppression de holo (remplacé par itemframe de homedecor)
+supression de mini economique (remplaçé par money)
+
+suppression de dirt (four ne fonctionne plus)
+suppression de street (ne fonctionne plus)
+suppression de npcf (inutile car mobs non craftable et non tuable)
+
+suppression de itemframe (existe deja dans homedecor)
+
+NOTE:
+
+revoir dirt
+revoir fluide
+revoir le craft des fence de steel
+trouver mod table de craft
+esperer maj de farming plus
+
+modification de workbench pour que le formspec ressemble à celui par defaut + modification du formspec dans defaut!!!
+
+A ESSAYER:
+
+( )--> pas essayé // ( * ) --> essayé
+beer
+hops
+carts
+monorails (version a moi)
+maptools
+potions (version a moi)
+potionspack (version a moi)
+integration (version a moi)

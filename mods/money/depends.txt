@@ -1,0 +1,3 @@
+default
+locked_sign
+craft_guide
