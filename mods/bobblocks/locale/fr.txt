@@ -1,0 +1,27 @@
+### health.lua ###
+
+Health Pack = Pack de vie
+
+### trap.lua ###
+
+Trap Grass = Herbe traversable
+Trap Spike Minor = Piége a pique de faible dégât 
+Trap Spike Major = Piége a pique de grand dégât
+
+### block.lua ###
+
+%s Pole = Barrière lumineuse %s
+%s Block = Cube lumineu %s
+
+black = noir
+cyan = cyan
+violet = violet
+white = blanc
+yellow = jaune
+red = rouge
+orange = orange
+pink = rose
+grey = gris
+green = vert
+blue = bleu
+

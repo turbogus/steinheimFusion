@@ -1,66 +1,39 @@
-local is_healthpack = function(node)
-    if node.name == 'bobblocks:health_off' or node.name == 'health_on' then
-        return true
-    end
-    return false
-end
+local S
 
-local update_healthpack = function (pos, node)
-    local nodename=""
-    local param2=""
-    --Switch HealthPack State
-    if node.name == 'bobblocks:health_off' then
-        nodename = 'bobblocks:health_on'
-    elseif node.name == 'bobblocks:health_on' then
-        nodename = 'bobblocks:health_off'
-    end
-    minetest.env:add_node(pos, {name = nodename})
-end
-
-local toggle_healthpack = function (pos, node)
-    if not is_healthgate(node) then return end
-    update_healthpack (pos, node, state)
-end
-    
-local on_healthpack_punched = function (pos, node, puncher)
-    if node.name == 'bobblocks:health_off' or node.name == 'bobblocks:health_on' then
-        update_healthpack(pos, node)
-    end
+if intllib then
+	S = intllib.Getter()
+else
+	S = function(s) return s end
 end
 
 -- Healing Node
 
 minetest.register_node("bobblocks:health_off", {
-	description = "Health Pack 1 Off",
-    tile_images = {"bobblocks_health_off.png"},
-    inventory_image = "bobblocks_health_off.png",
+	description = S("Health Pack"),
+	tiles = {"bobblocks_health_off.png"},
+	inventory_image = minetest.inventorycube("bobblocks_health_off.png"),
 	paramtype2 = "facedir",
 	legacy_facedir_simple = true,
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3},
-    is_ground_content = true,
-    walkable = false,
-    climbable = false,
-    mesecons = {conductor={
-			state = mesecon.state.off,
-			onstate = "bobblocks:health_on"
-		}}
+	groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3},
+	is_ground_content = true,
+	walkable = false,
+	on_punch = function(pos, node, puncher)
+		minetest.add_node(pos, {name = "bobblocks:health_on"})
+	end,
 })
 
 minetest.register_node("bobblocks:health_on", {
-	description = "Health Pack 1 On",
-    tile_images = {"bobblocks_health_on.png"},
+	tiles = {"bobblocks_health_on.png"},
 	paramtype2 = "facedir",
 	legacy_facedir_simple = true,
-    light_source = LIGHT_MAX-0,
-    groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3},
-    is_ground_content = true,
-        walkable = false,
-    climbable = false,
+	light_source = LIGHT_MAX,
+	groups = {snappy=2,cracky=3,oddly_breakable_by_hand=3},
+	is_ground_content = true,
+	walkable = false,
+	on_punch = function(pos, node, puncher)
+		minetest.add_node(pos, {name = "bobblocks:health_off"})
+	end,	
     drop = "bobblocks:health_off",
-        mesecons = {conductor={
-			state = mesecon.state.on,
-			offstate = "bobblocks:health_off"
-		}}
 })
 
 
@@ -69,13 +42,12 @@ minetest.register_abm(
     interval = 1.0,
     chance = 1,
     action = function(pos, node, active_object_count, active_object_count_wider)
-    local objs = minetest.env:get_objects_inside_radius(pos, 1)
+    local objs = minetest.get_objects_inside_radius(pos, 1)
         for k, obj in pairs(objs) do
-        minetest.sound_play("bobblocks_health",
-	    {pos = pos, gain = 1.0, max_hear_distance = 32,})
-        obj:set_hp(obj:get_hp()+10)     -- give 10HP
-        minetest.env:remove_node(pos)  -- remove the node after use
-    end
+			minetest.sound_play("bobblocks_health",{pos = pos, gain = 1.0, max_hear_distance = 32,})
+			obj:set_hp(obj:get_hp()+10)     -- give 10HP
+			minetest.remove_node(pos)  -- remove the node after use
+		end
     end,
      
 })
@@ -83,13 +55,9 @@ minetest.register_abm(
 --- Health
 
 minetest.register_craft({
-	output = 'NodeItem "bobblocks:health_off" 1',
+	type = "shapeless",
+	output = "bobblocks:health_off 1",
 	recipe = {
-		{'node "default:dirt" 1', 'node "default:paper" 1', 'node "default:apple" 2'},
-
+		"default:dirt", "default:paper", "default:apple 2"
 	},
 })
-
-
-minetest.register_on_punchnode(on_healthpack_punched)
-
