@@ -1,5 +1,5 @@
 local S -- Load translation library if intllib is installed:
-if intllib then
+if rawget(_G,"intllib") then
 	S = intllib.Getter(minetest.get_current_modname())
 else
 	S = function(s) return s end

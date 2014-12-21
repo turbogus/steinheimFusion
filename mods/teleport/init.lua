@@ -125,6 +125,7 @@ minetest.register_globalstep(function(dtime)
 		if mversion<version then
 			local serveuradresse = minetest.deserialize(minetest.get_meta(TELEPORT_SERVEUR):get_string("lesadresse"))
 			local nouveauxserveuxadresse={}
+			if not serveuradresse then return end
 			for key, val in pairs(serveuradresse) do
 				--socle
 				local adresse = minetest.deserialize(minetest.get_meta(val):get_string("adresse"))
@@ -144,7 +145,7 @@ end)
 --Function
 
 local function actualisation(pos)
-	local menservice = minetest.get_meta(pos):get_int("enservice")
+	menservice = minetest.get_meta(pos):get_int("enservice")
 	if menservice==0 then
 		return true
 	elseif not(os.difftime(os.time(),menservice)>TELEPORT_DUREE_VORTEX or os.difftime(os.time(),menservice)<0) then	
@@ -156,22 +157,6 @@ local function actualisation(pos)
 				minetest.remove_node(portail[c])
 			end
 		end
-		local posdhd=minetest.deserialize(minetest.get_meta(pos):get_string("posdhd"))
-		if not(posdhd==nil) then
-			local nodeparam2 = minetest.get_node(posdhd).param2+1
-			local poshud={x=posdhd.x,y=posdhd.y+1,z=posdhd.z}
-			for c=1,table.getn(hudadresse.desactif) do
-				local bo = minetest.get_objects_inside_radius({
-					x=poshud.x+hudadresse.desactif[c].x*facedir[nodeparam2].x,
-					y=poshud.y+hudadresse.desactif[c].y,
-					z=poshud.z+hudadresse.desactif[c].z*facedir[nodeparam2].z},
-					0.05
-				)
-				if table.getn(bo)>0 then
-					bo[1]:remove()
-				end
-			end
-		end		
 		minetest.get_meta(pos):set_int("enservice",nil)
 		return true
 	end
@@ -283,7 +268,7 @@ local function dhdspwan(pos, itemname, poscentrale)
 	return obj
 end
 
-local function bouger(liste,activer,poshud)
+local function bouger(liste,activer,poshud,timer)
 	local nodeparam2 = minetest.get_node({x=poshud.x,y=poshud.y-1,z=poshud.z}).param2+1
 	local status = {"actif","desactif"}
 	if not(activer) then
@@ -297,11 +282,15 @@ local function bouger(liste,activer,poshud)
 			0.05
 		)
 		if table.getn(bo)>0 then
+			if timer == true then
+				bo[1]:get_luaentity().timer = os.time()
+			end
 		bo[1]:moveto({
 			x=poshud.x+liste[status[1]][c].x*facedir[nodeparam2].x,
 			y=poshud.y+liste[status[1]][c].y,
 			z=poshud.z+liste[status[1]][c].z*facedir[nodeparam2].z
 		})
+		
 		else
 			return
 		end
@@ -391,16 +380,18 @@ minetest.register_entity("teleport:clavier", {
 	},
 	itemname = "",
 	pos = {},
+	timer= nil,
 	set_item = function(self, itemstring)
 		local itemstring = minetest.deserialize(itemstring)
 		self.itemname = itemstring["itemname"]
 		self.pos = itemstring["pos"]
+		self.timer = itemstring["timer"]
 		local itemname = itemstring["itemname"]
 		local item_texture = nil
 		if minetest.registered_items[itemname] then
 			item_texture = minetest.registered_items[itemname].inventory_image
 		end
-		local prop = {
+		prop = {
 			is_visible = true,
 			visual = "wielditem",
 			textures = {itemname}
@@ -414,6 +405,7 @@ minetest.register_entity("teleport:clavier", {
 			if data and type(data) == "table" then
 				self.itemname = staticdata["itemname"]
 				self.pos = staticdata["pos"]
+				self.timer = staticdata["timer"]
 				self:set_item(staticdata)
 			end
 		end
@@ -421,10 +413,14 @@ minetest.register_entity("teleport:clavier", {
 	end,
 	
 	get_staticdata = function(self)
-		return minetest.serialize({itemname=self.itemname,pos=self.pos})
+		return minetest.serialize({itemname = self.itemname, pos = self.pos, timer = self.timer})
 	end,
-	
-	 on_rightclick = function(self, hitter)
+	on_step= function(self, dtime)
+		if (os.difftime(os.time(),self.timer)>TELEPORT_DUREE_VORTEX or os.difftime(os.time(),self.timer)<0) and self.timer~=nil then
+			self.object:remove()
+		end
+	end,
+	on_rightclick = function(self, hitter)
 		local pos = self.object:getpos()
 		local nodeparam2 = minetest.get_node({x=self.pos.x,y=self.pos.y-1,z=self.pos.z}).param2+1
 		local possocle = minetest.deserialize(minetest.get_meta({x=self.pos.x,y=self.pos.y-1,z=self.pos.z}):get_string("socle"))
@@ -512,14 +508,15 @@ minetest.register_entity("teleport:clavier", {
 										--Temp
 										minetest.get_meta(possocle):set_int("enservice", os.time())
 										minetest.get_meta(possoclereception):set_int("enservice", os.time())
+										
 										--Adresse bouger et la mémoire effacé
-										bouger(hudadresse,false,self.pos)
+										bouger(hudadresse,false,self.pos,true)
 										for c1=1,table.getn(hudadresse.actif) do	
 											adressecompose[c] = ""
 										end
 										minetest.get_meta(possocle):set_string("adressecompose",minetest.serialize(adressecompose))
 										
-										-- Clavier retracté
+										-- Clavier rétracté
 										bouger(hudclavier,false,self.pos)
 										
 										--Prix bouger
@@ -553,7 +550,6 @@ minetest.register_entity("teleport:prix", {
 			if data and type(data) == "table" then
 				self.pos = data
 				if self.pos.y then
-					local prop = nil
 					if self.object:getpos().y<self.pos.y-0.1 then
 						prop = {
 							collisionbox = {-0.1,-0.1,-0.1, 0.1,0.1,0.1},

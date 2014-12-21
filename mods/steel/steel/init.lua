@@ -193,7 +193,7 @@ minetest.register_node("steel:roofing_wall", {
         },
 })
 
-if homedecor_register_slope and homedecor_register_roof then
+if rawget(_G, "homedecor_register_slope") and rawget(_G,"homedecor_register_roof") then
 	homedecor_register_slope("steel", "roofing", 
 		"steel:roofing", 
 		{bendy=2,snappy=1,dig_immediate=2}, 

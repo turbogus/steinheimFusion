@@ -3,7 +3,7 @@
 -- Simplify and modify by Jat
 local S
 
-if intllib then
+if rawget(_G,"intllib") then
 	S = intllib.Getter()
 else
 	S = function(s) return s end
