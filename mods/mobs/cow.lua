@@ -6,15 +6,12 @@ mobs:register_mob("mobs:cow", {
 	hp_min = 5,
 	hp_max = 20,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
-	--textures = {"mobs_cow.png"},
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_cow.png"},
-	},
+	textures = {"mobs_cow.png"},
 	visual = "mesh",
 	mesh = "mobs_cow.x",
 	makes_footstep_sound = true,
 	view_range = 7,
+	monsterdetect = false,
 	walk_velocity = 1,
 	run_velocity = 2,
 	damage = 10,
@@ -35,7 +32,7 @@ mobs:register_mob("mobs:cow", {
 	},
 	-- right-click cow with empty bucket to get milk, then feed 8 wheat to replenish milk
 	on_rightclick = function(self, clicker)
-		local tool = clicker:get_wielded_item()
+		tool = clicker:get_wielded_item()
 		if tool:get_name() == "bucket:bucket_empty" then
 			if self.milked then
 				do return end

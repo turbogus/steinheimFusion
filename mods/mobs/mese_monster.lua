@@ -19,11 +19,7 @@ mobs:register_mob("mobs:mese_monster", {
 	collisionbox = {-0.5, -1.5, -0.5, 0.5, 0.5, 0.5},
 	visual = "mesh",
 	mesh = "zmobs_mese_monster.x",
-	--textures = {"zmobs_mese_monster.png"},
-	available_textures = {
-		total = 1,
-		texture_1 = {"zmobs_mese_monster.png"},
-	},
+	textures = {"zmobs_mese_monster.png"},
 	visual_size = {x=1, y=1},
 	makes_footstep_sound = true,
 	view_range = 10,
@@ -63,8 +59,7 @@ mobs:register_mob("mobs:mese_monster", {
 	},
 	jump = true,
 	step = 0.5,
-	shoot_offset = 2,
-	blood_texture = "default_mese_crystal_fragment.png",
+		blood_texture = "default_mese_crystal_fragment.png",
 })
 mobs:register_spawn("mobs:mese_monster", {"default:stone"}, 3, -1, 5000, 1, -20)
 
@@ -83,7 +78,7 @@ mobs:register_arrow("mobs:mese_arrow", {
 		player:punch(self.object, 1.0,  {
 			full_punch_interval=1.0,
 			damage_groups = {fleshy=1},
-		}, 0) -- {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z})
+		}, {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z})
 	end,
 	
 	hit_node = function(self, pos, node)

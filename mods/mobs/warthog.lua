@@ -5,11 +5,7 @@ mobs:register_mob("mobs:pumba", {
 	hp_min = 5,
 	hp_max = 15,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
-	--textures = {"mobs_pumba.png"},
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_pumba.png"},
-	},
+	textures = {"mobs_pumba.png"},
 	visual = "mesh",
 	mesh = "mobs_pumba.x",
 	makes_footstep_sound = true,
@@ -59,7 +55,7 @@ passive = true,
 	end,
 	
 })
-mobs:register_spawn("mobs:pumba", {"ethereal:mushroom_dirt", "default:dirt", "default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
+mobs:register_spawn("mobs:pumba", {"ethereal:mushroom_dirt", "default:dirt_with_grass","default:dirt","default:snow", "default:snowblock"}, 20, 8, 9000, 1, 31000)
 
 -- Porkchops
 

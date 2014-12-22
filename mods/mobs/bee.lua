@@ -8,12 +8,9 @@ mobs:register_mob("mobs:bee", {
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
 	visual = "mesh",
 	mesh = "mobs_bee.x",
-	--textures = {"mobs_bee.png"},
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_bee.png"},
-	},
+	textures = {"mobs_bee.png"},
 	makes_footstep_sound = false,
+	monsterdetect = false,
 	walk_velocity = 1,
 	armor = 200,
 	drops = {
@@ -45,7 +42,7 @@ jump = true,
 step = 1,
 passive = true,
 })
-mobs:register_spawn("mobs:bee", {"group:flower"}, 20, 4, 5000, 1, 31000)
+mobs:register_spawn("mobs:bee", {"group:flower", "default:dirt_with_grass","default:dirt"}, 20, -1, 7000, 1, 31000)
 
 minetest.register_craftitem("mobs:bee", {
 	description = "bee",
@@ -102,29 +99,5 @@ minetest.register_craft({
 	output = "mobs:beehive",
 	recipe = {
 		{"mobs:bee","mobs:bee","mobs:bee"},
-	}
-})
-
--- Honey Block
-minetest.register_node("mobs:honey_block", {
-	description = "Honey Block",
-	tiles = {"mobs_honey_block.png"},
-	groups = {snappy=3,flammable=2},
-	sounds = default.node_sound_dirt_defaults(),
-})
-
-minetest.register_craft({
-	output = "mobs:honey_block",
-	recipe = {
-		{"mobs:honey", "mobs:honey", "mobs:honey"},
-		{"mobs:honey", "mobs:honey", "mobs:honey"},
-		{"mobs:honey", "mobs:honey", "mobs:honey"},
-	}
-})
-
-minetest.register_craft({
-	output = "mobs:honey 9",
-	recipe = {
-		{"mobs:honey_block"},
 	}
 })

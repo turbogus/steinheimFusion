@@ -8,12 +8,7 @@ mobs:register_mob("mobs:oerkki", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_oerkki.x",
-	--textures = {"mobs_oerkki.png"},
-	available_textures = {
-		total = 2,
-		texture_1 = {"mobs_oerkki.png"},
-		texture_2 = {"mobs_oerkki2.png"},
-	},
+	textures = {"mobs_oerkki.png"},
 	visual_size = {x=5, y=5},
 	makes_footstep_sound = false,
 	view_range = 15,
@@ -49,4 +44,4 @@ mobs:register_mob("mobs:oerkki", {
 	step = 0.5,
 	blood_texture = "mobs_blood.png",
 })
-mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 7000, 1, -10)
+mobs:register_spawn("mobs:oerkki", {"default:stone"}, 20, -1, 7000, 1, 31000)

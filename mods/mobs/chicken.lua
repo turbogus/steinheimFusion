@@ -10,18 +10,10 @@ mobs:register_mob("mobs:chicken", {
 	visual = "mesh",
 	mesh = "chicken.x",
 	-- textures look repetative but they fix the wrapping bug
-	available_textures = {
-		total = 2,
-		texture_1 = {"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
-					"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
-					"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png"},
-		texture_2 = {"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png",
-					"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png",
-					"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png"},
-	},
-	--textures = {"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
-	--			"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png"},
+	textures = {"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
+				"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png"},
 	makes_footstep_sound = true,
+	monsterdetect = false,
 	walk_velocity = 1,
 	armor = 200,
 	drops = {

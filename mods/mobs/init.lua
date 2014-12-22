@@ -1,4 +1,4 @@
--- Mob Api (10th Dec 2014)
+-- Mob Api (18th Sep 2014)
 
 dofile(minetest.get_modpath("mobs").."/api.lua")
 
@@ -10,7 +10,10 @@ dofile(minetest.get_modpath("mobs").."/rat.lua")
 dofile(minetest.get_modpath("mobs").."/sheep.lua")
 dofile(minetest.get_modpath("mobs").."/warthog.lua")
 dofile(minetest.get_modpath("mobs").."/bee.lua")
-
+dofile(minetest.get_modpath("mobs").."/wardog.lua")
+dofile(minetest.get_modpath("mobs").."/wolf.lua")
+dofile(minetest.get_modpath("mobs").."/warspider.lua")
+dofile(minetest.get_modpath("mobs").."/littlespider.lua")
 -- Monsters
 
 --dofile(minetest.get_modpath("mobs").."/dirtmonster.lua")
@@ -19,6 +22,7 @@ dofile(minetest.get_modpath("mobs").."/oerkki.lua")
 --dofile(minetest.get_modpath("mobs").."/sandmonster.lua")
 dofile(minetest.get_modpath("mobs").."/stonemonster.lua")
 dofile(minetest.get_modpath("mobs").."/treemonster.lua")
+--dofile(minetest.get_modpath("mobs").."/yeti.lua")
 
 -- Zmobs by Zeg9
 
@@ -49,6 +53,7 @@ minetest.register_craft({
 	recipe = "mobs:meat_raw",
 	cooktime = 5,
 })
+
 
 if minetest.setting_get("log_mods") then
 	minetest.log("action", "mobs loaded")

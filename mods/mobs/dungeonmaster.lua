@@ -8,13 +8,7 @@ mobs:register_mob("mobs:dungeon_master", {
 	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
 	visual = "mesh",
 	mesh = "mobs_dungeon_master.x",
-	--textures = {"mobs_dungeon_master.png"},
-	available_textures = {
-		total = 3,
-		texture_1 = {"mobs_dungeon_master.png"},
-		texture_2 = {"mobs_dungeon_master2.png"},
-		texture_3 = {"mobs_dungeon_master3.png"},
-	},
+	textures = {"mobs_dungeon_master.png"},
 	visual_size = {x=8, y=8},
 	makes_footstep_sound = true,
 	view_range = 15,
@@ -63,10 +57,9 @@ mobs:register_mob("mobs:dungeon_master", {
 	},
 	jump = true,
 	step = 0.5,
-	shoot_offset = 0,
 	blood_texture = "mobs_blood.png",
 })
-mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -70)
+mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 20, -1, 7000, 1, 31000)
 
 -- Fireball (weapon)
 
@@ -80,10 +73,11 @@ mobs:register_arrow("mobs:fireball", {
 	hit_player = function(self, player)
 		local s = self.object:getpos()
 		local p = player:getpos()
+		local vec = {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z}
 		player:punch(self.object, 1.0,  {
 			full_punch_interval=1.0,
-			damage_groups = {fleshy=8},
-		}, 0) -- {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z})
+			damage_groups = {fleshy=6},
+		}, vec)
 	end,
 
 	-- node hit, bursts into flame (cannot blast through obsidian)
