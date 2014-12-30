@@ -486,7 +486,6 @@ local function on_receive_fields(pos, form_name, fields)
 	end
 end
 
-handle_timer = nil
 for a = 0, 1 do -- 0 = off  1 = on
 for b = 0, 1 do
 for c = 0, 1 do
@@ -560,7 +559,6 @@ for d = 0, 1 do
 		node_box = node_box,
 		on_construct = reset_meta,
 		on_receive_fields = on_receive_fields,
-		on_timer = handle_timer,
 		sounds = default.node_sound_stone_defaults(),
 		mesecons = mesecons,
 		digiline = digiline,
@@ -586,7 +584,6 @@ end
 -- Overheated LuaController --
 ------------------------------
 
-selectionbox = nil
 minetest.register_node(BASENAME .. "_burnt", {
 	drawtype = "nodebox",
 	tiles = {
@@ -602,7 +599,7 @@ minetest.register_node(BASENAME .. "_burnt", {
 	groups = {dig_immediate=2, not_in_creative_inventory=1},
 	drop = BASENAME.."0000",
 	sunlight_propagates = true,
-	selection_box = selectionbox,
+	selection_box = selection_box,
 	node_box = node_box,
 	on_construct = reset_meta,
 	on_receive_fields = on_receive_fields,

@@ -32,6 +32,32 @@ minetest.register_craft({
 		{"group:wood", "group:wood"},
 	},
 })
+
+--drop craf items and reset inventory on closing
+local function drop_fields(player, name)
+	local inv = player:get_inventory()
+	for i,stack in ipairs(inv:get_list(name)) do
+		item_drop(stack, player, player:getpos())
+		stack:clear()
+		inv:set_stack(name, i, stack)
+	end
+end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if fields.quit then
+		local formspec = player:get_inventory_formspec()
+		if formspec == "craft" then
+			drop_fields(player,"craft")
+		end
+		--local size = string.len(formspec)
+		--local marker = string.sub(formspec,size-2)
+		--if marker == "inv" or marker == "wob" then
+			--set_inventory(player)
+		--	drop_fields(player,"craft")			
+		--end
+	end
+end)
+
 --[[
 minetest.register_on_joinplayer(function(player)
 	if not minetest.setting_getbool("creative_mode") then

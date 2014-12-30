@@ -1,2 +1,3 @@
 mesecons
 doors
+craft_guide
