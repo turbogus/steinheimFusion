@@ -235,6 +235,7 @@ minetest.register_node("riventest:plinkingbook", {
 
 
 GLOWLIKE = function(nodeid,nodename,drawtype)
+	local inv_image
 	if drawtype == nil then 
 		drawtype = 'glasslike'
 		inv_image = minetest.inventorycube("riventest_"..nodeid..".png")
@@ -297,7 +298,7 @@ SOUNDNODE = function(nodeid, nodename,drawtype)
 		end
 
 	end
-	after_dig_node = function(pos,node)
+	local after_dig_node = function(pos,node)
 		local sound = SOUNDS[nodeid].sounds[minetest.hash_node_position(pos)]
 		if sound ~= nil then
 			minetest.sound_stop(sound.handle)
