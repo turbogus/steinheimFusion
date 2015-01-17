@@ -1,5 +1,5 @@
 local old_nodes = {"moretrees:apple_blossome","holo:holo:",
-				"maptools:wood"}
+				"maptools:wood","dirt:dirt_brick_wall"}
 local old_entities = {}
 
 for _,node_name in ipairs(old_nodes) do
