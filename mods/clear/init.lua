@@ -20,7 +20,11 @@ local old_nodes = {"moretrees:apple_blossome","holo:holo:",
 				 "trunks:twig", "trunks:twig_1", "trunks:moss", "trunks:moss_fungus", "woodstuff:twigs", "trunks:twigs_slab", "trunks:twigs_roof", "trunks:twigs_roof_corner", "trunks:twigs_roof_corner_2", 
 				 "vines:rope_block", "vines:rope", "vines:rope_end", "vines:side", "vines:side_rotten", "vines:willow", "vines:willow_rotten", "vines:root", "vines:vine", "vines:vine_rotten", 
 				 "woodsoils:dirt_with_leaves_1", "woodsoils:dirt_with_leaves_2", "woodsoils:grass_with_leaves_1", "woodsoils:grass_with_leaves_2", 
-				 "youngtrees:bamboo", "youngtrees:youngtree2_middle", "youngtrees:youngtree_top", "youngtrees:youngtree_middle", "youngtrees:youngtree_bottom"
+				 "youngtrees:bamboo", "youngtrees:youngtree2_middle", "youngtrees:youngtree_top", "youngtrees:youngtree_middle", "youngtrees:youngtree_bottom",
+				 "bushes:bushbranches4", "bushes:bushbranches3", "trunks:twig_13", "trunks:twig_12",
+				 "trunks:twig_11", "trunks:twig_10", "trunks:twig_9", "trunks:twig_8", "trunks:twig_7",
+				 "trunks:twig_6", "trunks:twig_5", "trunks:twig_4", "trunks:twig_3", "trunks:twig_2", "trunks:twig_1",
+				 "moretrees:apple_blossoms",
 				   }
 local old_entities = {}
 
