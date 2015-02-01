@@ -115,3 +115,4 @@ for _,color in ipairs(colors) do
 end
 
 minetest.register_alias("ball", "soccer:ball_black_item")
+minetest.register_alias("wool:purple", "wool:pink") -- Alias to enable craft recipe
