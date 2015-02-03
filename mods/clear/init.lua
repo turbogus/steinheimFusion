@@ -24,7 +24,8 @@ local old_nodes = {"moretrees:apple_blossome","holo:holo:",
 				 "bushes:bushbranches4", "bushes:bushbranches3", "trunks:twig_13", "trunks:twig_12",
 				 "trunks:twig_11", "trunks:twig_10", "trunks:twig_9", "trunks:twig_8", "trunks:twig_7",
 				 "trunks:twig_6", "trunks:twig_5", "trunks:twig_4", "trunks:twig_3", "trunks:twig_2", "trunks:twig_1",
-				 "moretrees:apple_blossoms",
+				 "moretrees:apple_blossoms","flowers:potted_dandelion_white","flowers:potted_dandelion_yellow",
+				 "flowers:potted_geranium","flowers:potted_rose","flowers:potted_tulip","flowers:potted_viola",
 				   }
 local old_entities = {}
 
