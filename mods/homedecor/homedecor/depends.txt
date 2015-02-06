@@ -1,6 +1,0 @@
-default
-craft_guide
-building_blocks?
-signs_lib?
-moreblocks?
-

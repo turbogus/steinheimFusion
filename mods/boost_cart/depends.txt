@@ -1,4 +1,0 @@
-default
-craft_guide
-mesecons?
-moreores?
