@@ -57,7 +57,7 @@ minetest.register_tool("throwing:bow_stone", {
 	inventory_image = "throwing_bow_stone.png",
     stack_max = 1,
 	on_use = function(itemstack, user, pointed_thing)
-		if throwing_shoot_arrow(item, user, pointed_thing) then
+		if throwing_shoot_arrow(itemstack, user, pointed_thing) then
 			if not minetest.setting_getbool("creative_mode") then
 				itemstack:add_wear(65535/100)
 			end
@@ -80,7 +80,7 @@ minetest.register_tool("throwing:bow_steel", {
 	inventory_image = "throwing_bow_steel.png",
     stack_max = 1,
 	on_use = function(itemstack, user, pointed_thing)
-		if throwing_shoot_arrow(item, user, pointed_thing) then
+		if throwing_shoot_arrow(itemstack, user, pointed_thing) then
 			if not minetest.setting_getbool("creative_mode") then
 				itemstack:add_wear(65535/200)
 			end

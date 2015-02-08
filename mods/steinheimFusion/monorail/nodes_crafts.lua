@@ -203,7 +203,7 @@ minetest.register_craftitem("monorail:transport_cart", {
 			local pos = pointed_thing.above
 			minetest.env:add_entity(pos,"monorail:transport_cart_ent")
 
-			if new_object ~= nil then
+			if rawget(_G,"new_object") ~= nil then
 				local slidertype = detect_slider_type({x=pos.x,y=pos.y-1,z=pos.z}, nil)
 
 				--print("slidertype: " .. dump(slidertype))
