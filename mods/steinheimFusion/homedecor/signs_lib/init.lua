@@ -3,10 +3,16 @@
 -- PilzAdam's original text-on-signs mod and rewritten by Vanessa Ezekowitz
 -- and Diego Martinez
 
+-- textpos = {
+--		{ delta = {entity position for 0° yaw}, exact yaw expression }
+--		{ delta = {entity position for 180° yaw}, exact yaw expression }
+--		{ delta = {entity position for 270° yaw}, exact yaw expression }
+--		{ delta = {entity position for 90° yaw}, exact yaw expression }
+-- }
+
 signs_lib = {}
 
 signs_lib.modpath = minetest.get_modpath("signs_lib")
-signs_lib.intllib_modpath = minetest.get_modpath("intllib")
 
 signs_lib.wall_sign_model = {
 	nodebox = {
@@ -14,10 +20,10 @@ signs_lib.wall_sign_model = {
 		fixed = {-0.4375, -0.25, 0.4375, 0.4375, 0.375, 0.5}
 	},
 	textpos = {
-		{delta = {x =  0,     y = 0.07, z =  0.436}, yaw = 0},
-		{delta = {x =  0.436, y = 0.07, z =  0    }, yaw = math.pi / -2},
-		{delta = {x =  0,     y = 0.07, z = -0.436}, yaw = math.pi},
-		{delta = {x = -0.436, y = 0.07, z =  0    }, yaw = math.pi / 2},
+		{delta = {x =  0,     y = 0.07, z =  0.43  }, yaw = 0},
+		{delta = {x =  0.43,  y = 0.07, z =  0     }, yaw = math.pi / -2},
+		{delta = {x =  0,     y = 0.07, z = -0.43  }, yaw = math.pi},
+		{delta = {x = -0.43,  y = 0.07, z =  0     }, yaw = math.pi / 2},
 	}
 }
 
@@ -30,10 +36,10 @@ signs_lib.yard_sign_model = {
 		}
 	},
 	textpos = {
-		{delta = {x =  0,      y = 0.07, z = -0.063}, yaw = 0},
-		{delta = {x = -0.063,  y = 0.07, z =  0    }, yaw = math.pi / -2},
-		{delta = {x =  0,      y = 0.07, z =  0.063}, yaw = math.pi},
-		{delta = {x =  0.063,  y = 0.07, z =  0    }, yaw = math.pi / 2},
+		{delta = {x =  0,      y = 0.07, z = -0.068}, yaw = 0},
+		{delta = {x = -0.068,  y = 0.07, z =  0    }, yaw = math.pi / -2},
+		{delta = {x =  0,      y = 0.07, z =  0.068}, yaw = math.pi},
+		{delta = {x =  0.068,  y = 0.07, z =  0    }, yaw = math.pi / 2},
 	}
 }
 
@@ -69,13 +75,8 @@ signs_lib.sign_post_model = {
 	}
 }
 
-local S
-if signs_lib.intllib_modpath then
-    dofile(signs_lib.intllib_modpath.."/intllib.lua")
-    S = intllib.Getter(minetest.get_current_modname())
-else
-    S = function ( s ) return s end
-end
+-- Boilerplate to support localized strings if intllib mod is installed.
+local S = rawget(_G, "intllib") and intllib.Getter() or function(s) return s end
 signs_lib.gettext = S
 
 -- the list of standard sign nodes
@@ -178,11 +179,8 @@ local CHARDB_FILE = minetest.get_worldpath().."/signs_lib_chardb"
 
 -- helper functions to trim sign text input/output
 
-text_trimmed = nil
 local function trim_input(text)
-	local txt_len = string.len(text)
-	text_trimmed = string.sub(text, 1, math.min(MAX_INPUT_CHARS, txt_len))
-	return text_trimmed
+	return text:sub(1, math.min(MAX_INPUT_CHARS, text:len()))
 end
 
 -- Returns true if any file differs from cached one.
@@ -385,7 +383,7 @@ local function make_line_texture(line, lineno)
 					else
 						maxw = math_max(width, maxw)
 					end
-					if #chars < MAX_INPUT_CHARS then 
+					if #chars < MAX_INPUT_CHARS then
 						table.insert(chars, {
 							off=ch_offs,
 							tex=FONT_FMT_SIMPLE:format(c:byte()),
@@ -631,8 +629,7 @@ function signs_lib.receive_fields(pos, formname, fields, sender, lock)
 			sender:get_player_name())
 		return
 	end
-	lockstr = ""
-	if lock then lockstr = "locked " end
+	local lockstr = lock and "locked " or ""
 	if fields and fields.text and fields.ok then
 		minetest.log("action", S("%s wrote \"%s\" to "..lockstr.."sign at %s"):format(
 			(sender:get_player_name() or ""),

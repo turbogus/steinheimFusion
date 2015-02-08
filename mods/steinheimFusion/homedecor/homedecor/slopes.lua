@@ -47,6 +47,7 @@ homedecor.register_outer_corner = function(modname, subname, groups, slope_image
 		selection_box = ocorner_cbox,
 		collision_box = ocorner_cbox,
 		groups = groups,
+		on_place = minetest.rotate_node
 	})
 end
 
@@ -59,12 +60,10 @@ homedecor.register_inner_corner = function(modname, subname, groups, slope_image
 		paramtype = "light",
 		paramtype2 = "facedir",
 		walkable = true,
-		selection_box = {
-			type = "fixed",
-			fixed = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}
-		},
+		selection_box = { type = "regular" },
 		collision_box = icorner_cbox,
 		groups = groups,
+		on_place = minetest.rotate_node
 	})
 end
 
@@ -80,6 +79,7 @@ homedecor.register_slope = function(modname, subname, recipeitem, groups, slope_
 		selection_box = slope_cbox,
 		collision_box = slope_cbox,
 		groups = groups,
+		on_place = minetest.rotate_node
 	})
 
 	-- convert between flat shingles and slopes
@@ -177,20 +177,20 @@ minetest.register_craft( {
 })
 
 minetest.register_craft({
-    type = "fuel",
-    recipe = "homedecor:shingle_inner_corner_wood",
-    burntime = 30,
+	type = "fuel",
+	recipe = "homedecor:shingle_inner_corner_wood",
+	burntime = 30,
 })
 
 minetest.register_craft({
-    type = "fuel",
-    recipe = "homedecor:shingle_outer_corner_wood",
-    burntime = 30,
+	type = "fuel",
+	recipe = "homedecor:shingle_outer_corner_wood",
+	burntime = 30,
 })
 
 minetest.register_craft({
-    type = "fuel",
-    recipe = "homedecor:shingle_side_wood",
+	type = "fuel",
+	recipe = "homedecor:shingle_side_wood",
 	burntime = 30,
 })
 

@@ -406,7 +406,7 @@ minetest.register_craft( {
 
 minetest.register_craft( {
         output = "homedecor:glass_table_large_b 2",
-        recipe = { 
+        recipe = {
 		{ "homedecor:glass_table_small_square", "homedecor:glass_table_small_square" },
 	}
 })
@@ -424,14 +424,14 @@ minetest.register_craft( {
 
 minetest.register_craft( {
         output = "homedecor:wood_table_small_square_b 2",
-        recipe = { 
+        recipe = {
 		{ "homedecor:wood_table_small_round","homedecor:wood_table_small_round" },
 	}
 })
 
 minetest.register_craft( {
         output = "homedecor:wood_table_large_b 2",
-        recipe = { 
+        recipe = {
 		{ "homedecor:wood_table_small_square", "homedecor:wood_table_small_square" },
 	}
 })
@@ -495,7 +495,7 @@ minetest.register_craft({
 
 minetest.register_craft( {
         output = "homedecor:skylight 4",
-        recipe = { 
+        recipe = {
 		{ "homedecor:glass_table_large", "homedecor:glass_table_large" },
 		{ "homedecor:glass_table_large", "homedecor:glass_table_large" },
         },
@@ -1842,7 +1842,7 @@ minetest.register_craft( {
 	},
 })
 
--- woodglass door 
+-- woodglass door
 
 minetest.register_craft( {
 	output = "homedecor:door_woodglass_bottom_left",
@@ -2134,6 +2134,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+    output = "homedecor:cardboard_box_big 2",
+    recipe = {
+		{ "default:paper", "", "default:paper" },
+		{ "default:paper", "", "default:paper" },
+		{ "default:paper", "default:paper", "default:paper" },
+    },
+})
+
+minetest.register_craft({
     output = "homedecor:desk",
     recipe = {
 		{ "stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood" },
@@ -2370,7 +2379,7 @@ minetest.register_craft( {
 
 -- bathroom/kitchen tiles
 
-local color_pairings = { 
+local color_pairings = {
 	{ "grey",		"white",		"1" },
 	{ "dark_grey",	"white",		"2" },
 	{ "black",		"white",		"3" },
@@ -2738,6 +2747,24 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "homedecor:office_chair_basic",
+	recipe = {
+		{ "", "", "wool:black" },
+		{ "", "wool:black", "default:steel_ingot" },
+		{ "group:stick", "homedecor:pole_wrought_iron", "group:stick" }
+	},
+})
+
+minetest.register_craft({
+	output = "homedecor:office_chair_upscale",
+	recipe = {
+		{ "dye:black", "building_blocks:sticks", "group:wool" },
+		{ "homedecor:plastic_sheeting", "group:wool", "default:steel_ingot" },
+		{ "building_blocks:sticks", "homedecor:pole_wrought_iron", "building_blocks:sticks" }
+	},
+})
+
+minetest.register_craft({
 	output = "homedecor:wall_shelf 2",
 	recipe = {
 		{ "homedecor:wood_table_small_square", "homedecor:curtainrod_wood", "homedecor:curtainrod_wood" },
@@ -2879,7 +2906,10 @@ minetest.register_craft({
 local bookcolors = {
 	"red",
 	"green",
-	"blue"
+	"blue",
+	"violet",
+	"grey",
+	"brown"
 }
 
 for _, color in ipairs(bookcolors) do
@@ -2909,3 +2939,49 @@ minetest.register_craft({
 		{ "","default:paper","" }
 	},
 })
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "homedecor:4_bottles_brown",
+	recipe = {
+		"homedecor:bottle_brown",
+		"homedecor:bottle_brown",
+		"homedecor:bottle_brown",
+		"homedecor:bottle_brown"
+	},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "homedecor:4_bottles_green",
+	recipe = {
+		"homedecor:bottle_green",
+		"homedecor:bottle_green",
+		"homedecor:bottle_green",
+		"homedecor:bottle_green"
+	},
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "homedecor:4_bottles_multi",
+	recipe = {
+		"homedecor:bottle_brown",
+		"homedecor:bottle_brown",
+		"homedecor:bottle_green",
+		"homedecor:bottle_green",
+	},
+})
+
+minetest.register_craft({
+	output = "homedecor:wine_rack",
+	recipe = {
+		{ "homedecor:4_bottles_brown", "group:wood", "homedecor:4_bottles_brown" },
+		{ "homedecor:4_bottles_brown", "group:wood", "homedecor:4_bottles_brown" },
+		{ "homedecor:4_bottles_brown", "group:wood", "homedecor:4_bottles_brown" },
+	},
+})
+
+if (minetest.get_modpath("technic") and minetest.get_modpath("dye") and minetest.get_modpath("bees")) then
+	technic.register_separating_recipe({ input = {"bees:wax 1"}, output = {"homedecor:oil_extract 2","dye:yellow 1"} })
+end

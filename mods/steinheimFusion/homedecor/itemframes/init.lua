@@ -133,10 +133,11 @@ minetest.register_node("itemframes:frame",{
 		end
 	end,
 	can_dig = function(pos,player)
-		
+
 		local meta = minetest.get_meta(pos)
 		return player:get_player_name() == meta:get_string("owner")
 	end,
+	after_destruct = remove_item,
 })
 
 
@@ -177,10 +178,11 @@ minetest.register_node("itemframes:pedestal",{
 		end
 	end,
 	can_dig = function(pos,player)
-		
+
 		local meta = minetest.get_meta(pos)
 		return player:get_player_name() == meta:get_string("owner")
 	end,
+	after_destruct = remove_item,
 })
 
 -- automatically restore entities lost from frames/pedestals
