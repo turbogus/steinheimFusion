@@ -219,7 +219,7 @@ function detect_slider_type(pos,cartdir)
 
 	if is_slider(current_node.name) ~= true and
 		current_node.name ~= "air" then
-		print("not on slider:"..current_node.name)
+	--	print("not on slider:"..current_node.name)
 		return "inv"
 	end
 
