@@ -26,7 +26,8 @@ local old_nodes = {"moretrees:apple_blossome","holo:holo:",
 				 "trunks:twig_6", "trunks:twig_5", "trunks:twig_4", "trunks:twig_3", "trunks:twig_2", "trunks:twig_1",
 				 "moretrees:apple_blossoms","flowers:potted_dandelion_white","flowers:potted_dandelion_yellow",
 				 "flowers:potted_geranium","flowers:potted_rose","flowers:potted_tulip","flowers:potted_viola",
-				   }
+				 "christmas_craft:christmaslights", "flowers:waterlily", "hops:hops", "dirt:dirt_brick_wall", "flowers:potted_geranium",
+				  }
 local old_entities = {}
 
 for _,node_name in ipairs(old_nodes) do
