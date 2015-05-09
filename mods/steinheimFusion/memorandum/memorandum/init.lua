@@ -1,12 +1,20 @@
 -----------------------------------------------------------------------------------------------
 local title		= "Memorandum"
-local version 	= "0.1.1"
+local version 	= "0.1.2"
 local mname		= "memorandum"
 -----------------------------------------------------------------------------------------------
+-- Boilerplate to support localized strings if intllib mod is installed.
+local S
+if rawget(_G, "intllib") then
+	S = intllib.Getter()
+else
+	S = function(s) return s end
+end
+
 --				{ left	, bottom , front  ,  right ,  top   ,  back  }
 local sheet =	{ -1/2  , -1/2   , -1/2   , 1/2    , -7/16  ,  1/2  }
-local info  =	'On this piece of paper is written: "'
-local sign  =	'" Signed by '
+local info  =	S('On this piece of paper is written: "')
+local sign  =	S('" Signed by:')
 --           { s,  w, n,  e }
 local wdir = { 8, 17, 6, 15 } -- wall direction
 
@@ -15,7 +23,7 @@ minetest.register_alias("memorandum:letter_empty_2"  ,"memorandum:letter_empty" 
 minetest.register_alias("memorandum:letter_written_2","memorandum:letter_written")
 			
 minetest.register_craftitem(":default:paper", {
-	description = "Paper",
+	description = S("Paper"),
 	inventory_image = "default_paper.png",
 	on_place = function(itemstack, placer, pointed_thing)
 		local pt = pointed_thing
@@ -54,13 +62,16 @@ minetest.register_node("memorandum:letter_empty", {
 		meta:set_string(
 					"formspec", 
 					"size[10,7]"..
-					"field[1,1;8.5,1;text; Write a Letter;${text}]"..
-					"field[1,3;4.25,1;signed; Sign Letter (optional);${signed}]"..
-					"button_exit[0.75,5;4.25,1;text,signed;Done]"
+					"field[1,1;8.5,1;text;"..S("Write a Letter")..";${text}]"..
+					"field[1,3;4.25,1;signed;"..S("Sign Letter (optional)")..";${signed}]"..
+					"button_exit[0.75,5;4.25,1;text,signed;"..S("Done").."]"
 				)
 		meta:set_string("infotext", info..'"')
 	end,
 	on_receive_fields = function(pos, formname, fields, sender)
+		if not (fields.text and fields.signed) then
+			return
+		end
 		local meta = minetest.get_meta(pos)
 		fields.text = fields.text
 		fields.signed = fields.signed
@@ -72,7 +83,7 @@ minetest.register_node("memorandum:letter_empty", {
 		end
 		meta:set_string("text", fields.text)
 		meta:set_string("signed", "")
-		meta:set_string("infotext", info..fields.text..'" Unsigned')
+		meta:set_string("infotext", S('%s %s" Unsigned'):format(info,fields.text))
 		if fields.signed ~= "" then
 			meta:set_string("signed", fields.signed)
 			meta:set_string("infotext", info..fields.text..sign..fields.signed)
@@ -87,7 +98,7 @@ minetest.register_node("memorandum:letter_empty", {
 })
 
 minetest.register_craftitem("memorandum:letter", {
-	description = "Letter",
+	description = S("Letter"),
 	inventory_image = "default_paper.png^memorandum_letters.png",
 	stack_max = 1,
 	groups = {not_in_creative_inventory=1},
@@ -95,6 +106,8 @@ minetest.register_craftitem("memorandum:letter", {
 		local player = user:get_player_name()
 		local text = itemstack:get_metadata()
 		local scnt = string.sub (text, -2, -1)
+		local mssg = ""
+		local sgnd = ""
 		if scnt == "00" then
 			mssg = string.sub (text, 1, -3)
 			sgnd = ""
@@ -136,7 +149,7 @@ minetest.register_craftitem("memorandum:letter", {
 				minetest.add_node(above, {name="memorandum:letter_written", param2=fdir})
 			end
 			if scnt == "00" or tonumber(scnt) == nil then
-				meta:set_string("infotext", info..mssg..'" Unsigned')
+				meta:set_string("infotext", S('%s %s" Unsigned'):format(info,mssg))
 			else
 				meta:set_string("infotext", info..mssg..sign..sgnd)
 			end
@@ -175,7 +188,7 @@ minetest.register_node("memorandum:letter_written", {
 			end
 			meta:set_string("text", fields.text)
 			meta:set_string("signed", "")
-			meta:set_string("infotext", info..fields.text..'" Unsigned')
+			meta:set_string("infotext", S('%s %s" Unsigned'):format(info,fields.text))
 			if fields.signed ~= "" then
 				meta:set_string("signed", fields.signed)
 				meta:set_string("infotext", info..fields.text..sign..fields.signed)
@@ -213,7 +226,7 @@ local function eraser_wear(itemstack, user, pointed_thing, uses)
 end
 
 minetest.register_tool("memorandum:eraser", {
-	description = "Eraser",
+	description = S("Eraser"),
 	inventory_image = "memorandum_eraser.png",
 	wield_image = "memorandum_eraser.png^[transformR90",--^[transformFX",
 	wield_scale = {x = 0.5, y = 0.5, z = 1},
@@ -229,9 +242,9 @@ minetest.register_tool("memorandum:eraser", {
 					meta:set_string(
 						"formspec", 
 						"size[10,7]"..
-						"field[1,1;8.5,1;text; Edit Text;${text}]"..
-						"field[1,3;4.25,1;signed; Edit Signature;${signed}]"..
-						"button_exit[0.75,5;4.25,1;text,signed;Done]"
+						"field[1,1;8.5,1;text;"..S("Edit Text")..";${text}]"..
+						"field[1,3;4.25,1;signed;"..S("Edit Signature")..";${signed}]"..
+						"button_exit[0.75,5;4.25,1;text,signed;"..S("Done").."]"
 					)
 					if not minetest.setting_getbool("creative_mode") then
 						return eraser_wear(itemstack, user, pointed_thing, 30)	
@@ -245,7 +258,7 @@ minetest.register_tool("memorandum:eraser", {
 })
 
 minetest.register_node("memorandum:message", {
-	description = "Message in a Bottle",
+	description = S("Message in a Bottle"),
 	drawtype = "plantlike",
 	tiles = {"vessels_glass_bottle.png^memorandum_message.png"},
 	inventory_image = "vessels_glass_bottle_inv.png^memorandum_message.png",
@@ -277,7 +290,7 @@ minetest.register_node("memorandum:message", {
 			if  minetest.get_node(pt.above).name == "air" then
 				minetest.add_node(pt.above, {name="memorandum:letter_written", param2=math.random(0,3)})
 				if scnt == "00" or tonumber(scnt) == nil then
-					meta:set_string("infotext", info..mssg..'" Unsigned')
+					meta:set_string("infotext", S('%s %s" Unsigned'):format(info,mssg))
 				else
 					meta:set_string("infotext", info..mssg..sign..sgnd)
 				end

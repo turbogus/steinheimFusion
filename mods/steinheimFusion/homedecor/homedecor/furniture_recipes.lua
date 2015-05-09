@@ -104,7 +104,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "homedecor:table_lamp_off",
+	output = "homedecor:table_lamp_white_off",
 	recipe = {
 		{"default:paper","default:torch" ,"default:paper"},
 		{"","group:stick",""},
@@ -113,7 +113,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "homedecor:table_lamp_off",
+	output = "homedecor:table_lamp_white_off",
 	recipe = {
 		{"default:paper","default:torch" ,"default:paper"},
 		{"","group:stick",""},
@@ -122,9 +122,9 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "homedecor:standing_lamp_bottom_off",
+	output = "homedecor:standing_lamp_white_off",
 	recipe = {
-		{"homedecor:table_lamp_off"},
+		{"homedecor:table_lamp_white_off"},
 		{"group:stick"},
 		{"group:stick"},
 	},
@@ -132,7 +132,7 @@ minetest.register_craft({
 
 minetest.register_craft({
 	type = "fuel",
-	recipe = "homedecor:table_lamp_off",
+	recipe = "homedecor:table_lamp_white_off",
 	burntime = 10,
 })
 
@@ -174,7 +174,7 @@ for _, color in ipairs(lamp_colors) do
 	})
 
 	minetest.register_craft({
-		output = "homedecor:standing_lamp_bottom_"..color.."_off",
+		output = "homedecor:standing_lamp_"..color.."_off",
 		recipe = {
 			{"homedecor:table_lamp_"..color.."_off"},
 			{"group:stick"},
@@ -184,9 +184,9 @@ for _, color in ipairs(lamp_colors) do
 
 	minetest.register_craft({
 		type = "shapeless",
-		output = "homedecor:standing_lamp_bottom_"..color.."_off",
+		output = "homedecor:standing_lamp_"..color.."_off",
 		recipe = {
-			"homedecor:standing_lamp_bottom_off",
+			"homedecor:standing_lamp_off",
 			"dye:"..color
 		},
 	})
@@ -197,7 +197,7 @@ minetest.register_craft({
 	output = "homedecor:toilet",
 	recipe = {
 		{"","","bucket:bucket_water"},
-		{ "building_blocks:Marble","building_blocks:Marble", "building_blocks:Marble" },
+		{ "group:marble","group:marble", "group:marble" },
 		{ "", "bucket:bucket_empty", "" },
 	},
 })
@@ -205,7 +205,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "homedecor:sink",
 	recipe = {
-		{ "building_blocks:Marble","bucket:bucket_empty", "building_blocks:Marble" },
+		{ "group:marble","bucket:bucket_empty", "group:marble" },
 	},
 })
 
@@ -217,9 +217,16 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "homedecor:taps_brass",
+	recipe = {
+		{ "technic:brass_ingot","bucket:bucket_water", "technic:brass_ingot" },
+	},
+})
+
+minetest.register_craft({
 	output = "homedecor:shower_tray",
 	recipe = {
-		{ "building_blocks:Marble","bucket:bucket_water", "building_blocks:Marble" },
+		{ "group:marble","bucket:bucket_water", "group:marble" },
 	},
 })
 

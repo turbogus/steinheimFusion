@@ -1,3 +1,10 @@
+--[[
+More Blocks: redefinitions of default stuff
+
+Copyright (c) 2011-2015 Calinou and contributors.
+Licensed under the zlib license. See LICENSE.md for more information.
+--]]
+
 -- Redefinitions of some default crafting recipes:
 
 minetest.register_craft({
@@ -26,7 +33,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "default:rail 16",
+	output = "default:rail 24",
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"default:steel_ingot", "default:stick", "default:steel_ingot"},
@@ -39,16 +46,8 @@ minetest.register_craft({
 	additional_wear = -0.15, -- Tool repair buff (15% bonus instead of 2%).
 })
 
--- Redefinitions of some default nodes:
-
--- Make glass and obsidian glass framed, like the More Blocks glasses:
-minetest.override_item("default:glass", {
-	drawtype = "glasslike_framed",
-})
-
-minetest.override_item("default:obsidian_glass", {
-	drawtype = "glasslike_framed",
-})
+-- Redefinitions of some default nodes
+-- ===================================
 
 -- Let there be light. This makes some nodes let light pass through:
 minetest.override_item("default:ladder", {

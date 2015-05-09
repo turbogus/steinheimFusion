@@ -1,30 +1,31 @@
 -- minetest/fire/init.lua
 
+fire = {}
+
 minetest.register_node("fire:basic_flame", {
 	description = "Fire",
-	drawtype = "plantlike",
+	drawtype = "firelike",
 	tiles = {{
 		name="fire_basic_flame_animated.png",
 		animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1},
 	}},
 	inventory_image = "fire_basic_flame.png",
 	light_source = 14,
-	groups = {igniter=2,dig_immediate=3,hot=3},
+	groups = {igniter=2,dig_immediate=3},
 	drop = '',
 	walkable = false,
 	buildable_to = true,
 	damage_per_second = 4,
-	
-	after_place_node = function(pos, placer)
-		fire.on_flame_add_at(pos)
+
+	on_construct = function(pos)
+		minetest.after(0, fire.on_flame_add_at, pos)
 	end,
-	
-	after_dig_node = function(pos, oldnode, oldmetadata, digger)
-		fire.on_flame_remove_at(pos)
+
+	on_destruct = function(pos)
+		minetest.after(0, fire.on_flame_remove_at, pos)
 	end,
 })
 
-fire = {}
 fire.D = 6
 -- key: position hash of low corner of area
 -- value: {handle=sound handle, name=sound name}
@@ -62,7 +63,7 @@ function fire.update_sounds_around(pos)
 	if not sound then
 		if should_have_sound then
 			fire.sounds[p0_hash] = {
-				handle = minetest.sound_play(wanted_sound, {pos=cp, loop=true}),
+				handle = minetest.sound_play(wanted_sound, {pos=cp, max_hear_distance = 16, loop=true}),
 				name = wanted_sound.name,
 			}
 		end
@@ -73,7 +74,7 @@ function fire.update_sounds_around(pos)
 		elseif sound.name ~= wanted_sound.name then
 			minetest.sound_stop(sound.handle)
 			fire.sounds[p0_hash] = {
-				handle = minetest.sound_play(wanted_sound, {pos=cp, loop=true}),
+				handle = minetest.sound_play(wanted_sound, {pos=cp, max_hear_distance = 16, loop=true}),
 				name = wanted_sound.name,
 			}
 		end
@@ -81,12 +82,10 @@ function fire.update_sounds_around(pos)
 end
 
 function fire.on_flame_add_at(pos)
-	--print("flame added at "..minetest.pos_to_string(pos))
 	fire.update_sounds_around(pos)
 end
 
 function fire.on_flame_remove_at(pos)
-	--print("flame removed at "..minetest.pos_to_string(pos))
 	fire.update_sounds_around(pos)
 end
 
@@ -107,7 +106,7 @@ end
 minetest.register_abm({
 	nodenames = {"group:flammable"},
 	neighbors = {"group:igniter"},
-	interval = 1,
+	interval = 5,
 	chance = 2,
 	action = function(p0, node, _, _)
 		-- If there is water or stuff like that around flame, don't ignite
@@ -117,7 +116,6 @@ minetest.register_abm({
 		local p = fire.find_pos_for_flame_around(p0)
 		if p then
 			minetest.set_node(p, {name="fire:basic_flame"})
-			fire.on_flame_add_at(p)
 		end
 	end,
 })
@@ -126,7 +124,7 @@ minetest.register_abm({
 minetest.register_abm({
 	nodenames = {"group:igniter"},
 	neighbors = {"air"},
-	interval = 2,
+	interval = 5,
 	chance = 10,
 	action = function(p0, node, _, _)
 		local reg = minetest.registered_nodes[node.name]
@@ -143,7 +141,6 @@ minetest.register_abm({
 			local p2 = fire.find_pos_for_flame_around(p)
 			if p2 then
 				minetest.set_node(p2, {name="fire:basic_flame"})
-				fire.on_flame_add_at(p2)
 			end
 		end
 	end,
@@ -153,13 +150,12 @@ minetest.register_abm({
 -- Remove flammable nodes and flame
 minetest.register_abm({
 	nodenames = {"fire:basic_flame"},
-	interval = 1,
+	interval = 3,
 	chance = 2,
 	action = function(p0, node, _, _)
 		-- If there is water or stuff like that around flame, remove flame
 		if fire.flame_should_extinguish(p0) then
 			minetest.remove_node(p0)
-			fire.on_flame_remove_at(p0)
 			return
 		end
 		-- Make the following things rarer
@@ -169,7 +165,6 @@ minetest.register_abm({
 		-- If there are no flammable nodes around flame, remove flame
 		if not minetest.find_node_near(p0, 1, {"group:flammable"}) then
 			minetest.remove_node(p0)
-			fire.on_flame_remove_at(p0)
 			return
 		end
 		if math.random(1,4) == 1 then
@@ -186,7 +181,6 @@ minetest.register_abm({
 		else
 			-- remove flame
 			minetest.remove_node(p0)
-			fire.on_flame_remove_at(p0)
 		end
 	end,
 })

@@ -43,36 +43,30 @@ local THROWING_ARROW_ENTITY={
 THROWING_ARROW_ENTITY.on_step = function(self, dtime)
 	self.timer=self.timer+dtime
 	local pos = self.object:getpos()
-	local node = minetest.env:get_node(pos)
+	local node = minetest.get_node(pos)
 
 	if self.timer>0.2 then
-		local objs = minetest.env:get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)
+		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 2)
 		for k, obj in pairs(objs) do
 			if obj:get_luaentity() ~= nil then
 				if obj:get_luaentity().name ~= "throwing:arrow_teleport_entity" and obj:get_luaentity().name ~= "__builtin:item" then
+					self.object:remove()
 					if self.player ~= "" then
 						self.player:setpos(pos)
-						self.player:get_inventory():add_item("main", ItemStack("throwing:arrow_teleport"))
+						self.player:get_inventory():add_item("main", ItemStack("default:stick 2"))
 					end
-					self.object:remove()
 				end
-			else
-				if self.player ~= "" then
-					self.player:setpos(pos)
-					self.player:get_inventory():add_item("main", ItemStack("throwing:arrow_teleport"))
-				end
-				self.object:remove()
 			end
 		end
 	end
 
 	if self.lastpos.x~=nil then
 		if node.name ~= "air" then
-			if self.player ~= "" then
-					self.player:setpos(self.lastpos)
-					self.player:get_inventory():add_item("main", ItemStack("throwing:arrow_teleport"))
-				end
 			self.object:remove()
+			if self.player ~= "" then
+				self.player:setpos(self.lastpos)
+				self.player:get_inventory():add_item("main", ItemStack("default:stick 2"))
+			end
 		end
 	end
 	self.lastpos={x=pos.x, y=pos.y, z=pos.z}
@@ -83,6 +77,13 @@ minetest.register_entity("throwing:arrow_teleport_entity", THROWING_ARROW_ENTITY
 minetest.register_craft({
 	output = 'throwing:arrow_teleport',
 	recipe = {
-		{'default:stick', 'default:stick', 'default:mese'},
+		{'default:stick', 'default:stick', 'default:mese_crystal_fragment'}
+	}
+})
+
+minetest.register_craft({
+	output = 'throwing:arrow_teleport',
+	recipe = {
+		{'default:mese_crystal_fragment', 'default:stick', 'default:stick'}
 	}
 })

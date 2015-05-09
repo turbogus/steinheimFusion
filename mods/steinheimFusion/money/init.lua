@@ -55,7 +55,6 @@ local exist = money.exist
 --End.
 
 --Creates player's account, if the player doesn't have it.
-name = nil
 minetest.register_on_joinplayer(function(player)
     name = player:get_player_name()
     if not exist(name) then

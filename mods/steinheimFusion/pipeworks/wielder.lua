@@ -43,6 +43,12 @@ local function wielder_on(data, wielder_pos, wielder_node)
 		wieldstack = inv:get_stack(wield_inv_name, 1)
 	end
 	local dir = minetest.facedir_to_dir(wielder_node.param2)
+	-- under/above is currently intentionally left switched
+	-- even though this causes some problems with deployers and e.g. seeds
+	-- as there are some issues related to nodebreakers otherwise breaking 2 nodes afar.
+	-- solidity would have to be checked as well,
+	-- but would open a whole can of worms related to difference in nodebreaker/deployer behavior
+	-- and the problems of wielders acting on themselves if below is solid
 	local under_pos = vector.subtract(wielder_pos, dir)
 	local above_pos = vector.subtract(under_pos, dir)
 	local pitch
@@ -224,27 +230,18 @@ local function register_wielder(data)
 				pipeworks.scan_for_tube_objects(pos)
 			end,
 			on_punch = data.fixup_node,
-			allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
-				local meta = minetest.get_meta(pos)
-				if player:get_player_name() ~= meta:get_string("owner") and meta:get_string("owner") ~= "" then
-					return 0
-				end
-				return count
-			end,
 			allow_metadata_inventory_put = function(pos, listname, index, stack, player)
-				local meta = minetest.get_meta(pos)
-				if player:get_player_name() ~= meta:get_string("owner") and meta:get_string("owner") ~= "" then
-					return 0
-				end
+				if not pipeworks.may_configure(pos, player) then return 0 end
 				return stack:get_count()
 			end,
 			allow_metadata_inventory_take = function(pos, listname, index, stack, player)
-				local meta = minetest.get_meta(pos)
-				if player:get_player_name() ~= meta:get_string("owner") and meta:get_string("owner") ~= "" then
-					return 0
-				end
+				if not pipeworks.may_configure(pos, player) then return 0 end
 				return stack:get_count()
 			end,
+			allow_metadata_inventory_move = function(pos, from_list, from_index, to_list, to_index, count, player)
+				if not pipeworks.may_configure(pos, player) then return 0 end
+				return count
+			end
 		})
 	end
 end

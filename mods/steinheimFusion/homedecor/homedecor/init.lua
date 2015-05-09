@@ -99,6 +99,18 @@ function homedecor.find_ceiling(itemstack, placer, pointed_thing)
 	return isceiling, pos
 end
 
+homedecor.plain_wood = "homedecor_generic_wood_plain.png^"..
+					   "(homedecor_generic_wood_boards_overlay.png^[colorize:#a7682020:100)"
+
+homedecor.mahogany_wood = "(homedecor_generic_wood_plain.png^[colorize:#401010:125)^"..
+					      "(homedecor_generic_wood_boards_overlay.png^[colorize:#66493880:200)"
+
+homedecor.white_wood = "(homedecor_generic_wood_plain.png^[colorize:#e0f0ff:200)^"..
+					   "(homedecor_generic_wood_boards_overlay.png^[colorize:#ffffff:200)"
+
+homedecor.dark_wood = "(homedecor_generic_wood_plain.png^[colorize:#140900:200)^"..
+					  "(homedecor_generic_wood_boards_overlay.png^[colorize:#21110180:180)"
+
 -- nodebox arithmetics and helpers
 -- (please keep non-generic nodeboxes with their node definition)
 dofile(homedecor.modpath.."/handlers/nodeboxes.lua")
@@ -117,7 +129,6 @@ dofile(homedecor.modpath.."/shutters.lua")
 dofile(homedecor.modpath.."/shingles.lua")
 dofile(homedecor.modpath.."/slopes.lua")
 
-dofile(homedecor.modpath.."/door_models.lua")
 dofile(homedecor.modpath.."/doors_and_gates.lua")
 
 dofile(homedecor.modpath.."/fences.lua")
@@ -136,10 +147,7 @@ dofile(homedecor.modpath.."/nightstands.lua")
 dofile(homedecor.modpath.."/clocks.lua")
 dofile(homedecor.modpath.."/misc-electrical.lua")
 
-dofile(homedecor.modpath.."/paintings.lua")
 dofile(homedecor.modpath.."/window_treatments.lua")
-
-dofile(homedecor.modpath.."/crafts.lua")
 
 dofile(homedecor.modpath.."/furniture.lua")
 dofile(homedecor.modpath.."/furniture_medieval.lua")
@@ -147,7 +155,14 @@ dofile(homedecor.modpath.."/furniture_recipes.lua")
 dofile(homedecor.modpath.."/climate-control.lua")
 
 dofile(homedecor.modpath.."/cobweb.lua")
+dofile(homedecor.modpath.."/beds.lua")
+dofile(homedecor.modpath.."/books.lua")
+dofile(homedecor.modpath.."/exterior.lua")
+dofile(homedecor.modpath.."/trash_cans.lua")
+dofile(homedecor.modpath.."/wardrobe.lua")
 
 dofile(homedecor.modpath.."/handlers/locked.lua")
+
+dofile(homedecor.modpath.."/crafts.lua")
 
 print("[HomeDecor] "..S("Loaded!"))

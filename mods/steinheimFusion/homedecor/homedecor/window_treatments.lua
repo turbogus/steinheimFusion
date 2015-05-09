@@ -1,4 +1,3 @@
-
 local S = homedecor.gettext
 
 homedecor.register("window_quartered", {
@@ -24,14 +23,12 @@ homedecor.register("window_quartered", {
 			{0.4375, -0.5, -0.0625, 0.5, 0.5, 0.0625}, -- NodeBox5
 			{-0.5, -0.5, -0.0625, -0.4375, 0.5, 0.0625}, -- NodeBox6
 			{-0.0625, -0.5, -0.025, 0.0625, 0.5, 0.025}, -- NodeBox7
-			},
-		},
+		}
+	},
 	selection_box = {
 		type = "fixed",
-		fixed = {
-			{-0.5, -0.5, -0.0625, 0.5, 0.5, 0.0625}
-		},
-	},
+		fixed = {-0.5, -0.5, -0.0625, 0.5, 0.5, 0.0625}
+	}
 })
 
 homedecor.register("window_plain", {
@@ -55,118 +52,78 @@ homedecor.register("window_plain", {
 			{-0.5, -0.5, -0.0625, 0.5, -0.4375, 0.0625}, -- NodeBox3
 			{0.4375, -0.5, -0.0625, 0.5, 0.5, 0.0625}, -- NodeBox4
 			{-0.5, -0.5, -0.0625, -0.4375, 0.5, 0.0625}, -- NodeBox5
-			},
-		},
+		}
+	},
 	selection_box = {
 		type = "fixed",
-		fixed = {
-			{-0.5, -0.5, -0.0625, 0.5, 0.5, 0.0625}
-			},
-		},
+		fixed = {-0.5, -0.5, -0.0625, 0.5, 0.5, 0.0625}
+	}
 })
+
+local wb1_cbox = {
+	type = "fixed",
+	fixed = { -8/16, -8/16, 5/16, 8/16, 8/16, 8/16 },
+}
 
 homedecor.register("blinds_thick", {
 	description = "Window Blinds (thick)",
-	tiles = { "homedecor_windowblinds.png" },
+	mesh = "homedecor_windowblind_thick.obj",
+	inventory_image = "homedecor_windowblind_thick_inv.png",
+	tiles = {
+		"homedecor_windowblind_strings.png",
+		"homedecor_windowblinds.png"
+	},
 	walkable = false,
 	groups = {snappy=3},
 	sounds = default.node_sound_wood_defaults(),
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.527123, 0.375, 0.3125, 0.523585, 0.5, 0.5}, -- NodeBox1
-			{-0.5, 0.304245, 0.3125, 0.5, 0.3125, 0.5}, -- NodeBox2
-			{-0.5, 0.244104, 0.3125, 0.5, 0.25, 0.5}, -- NodeBox3
-			{-0.5, 0.180424, 0.3125, 0.5, 0.1875, 0.5}, -- NodeBox4
-			{-0.5, 0.116745, 0.3125, 0.5, 0.125, 0.5}, -- NodeBox5
-			{-0.5, 0.0566037, 0.3125, 0.5, 0.0625, 0.5}, -- NodeBox6
-			{-0.5, -0.00707551, 0.3125, 0.5, 0, 0.5}, -- NodeBox7
-			{-0.5, -0.0707547, 0.3125, 0.5, -0.0625, 0.5}, -- NodeBox8
-			{-0.5, -0.130896, 0.3125, 0.5, -0.125, 0.5}, -- NodeBox9
-			{-0.5, -0.194576, 0.3125, 0.5, -0.1875, 0.5}, -- NodeBox10
-			{-0.5, -0.258255, 0.3125, 0.5, -0.25, 0.5}, -- NodeBox11
-			{-0.5, -0.318396, 0.3125, 0.5, -0.3125, 0.5}, -- NodeBox12
-			{-0.5, -0.5, 0.3125, 0.5, -0.4375, 0.5}, -- NodeBox13
-			{-0.5, -0.378538, 0.3125, 0.5, -0.375, 0.5}, -- NodeBox14
-			{-0.375, -0.5, 0.367925, -0.367925, 0.4375, 0.445755}, -- NodeBox15
-			{0.367924, -0.5, 0.367925, 0.375, 0.5, 0.445755}, -- NodeBox16
-			{0.375, 0.375, 0.25, 0.4375, 0.4375, 0.3125}, -- NodeBox17
-			{0.396226, -0.325, 0.268868, 0.417453, 0.375, 0.290094}, -- NodeBox18
-			},
-		},
-	selection_box = {
-		type = "fixed",
-		fixed = {
-			{-0.527123, -0.5, 0.25, 0.523585, 0.5, 0.5}
-			},
-		},
+	selection_box = wb1_cbox
 })
+
+local wb2_cbox = {
+	type = "fixed",
+	fixed = { -8/16, -8/16, 6/16, 8/16, 8/16, 8/16 },
+}
 
 homedecor.register("blinds_thin", {
 	description = "Window Blinds (thin)",
-	tiles = { "homedecor_windowblinds.png" },
+	mesh = "homedecor_windowblind_thin.obj",
+	inventory_image = "homedecor_windowblind_thick_inv.png",
+	tiles = {
+		"homedecor_windowblind_strings.png",
+		"homedecor_windowblinds.png"
+	},
 	walkable = false,
 	groups = {snappy=3},
 	sounds = default.node_sound_wood_defaults(),
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.52, 0.375, 0.4375, 0.52, 0.5, 0.5}, -- NodeBox1
-			{-0.5, 0.304245, 0.4375, 0.5, 0.3125, 0.5}, -- NodeBox2
-			{-0.5, 0.244104, 0.4375, 0.5, 0.25, 0.5}, -- NodeBox3
-			{-0.5, 0.180424, 0.43755, 0.5, 0.1875, 0.5}, -- NodeBox4
-			{-0.5, 0.116745, 0.4375, 0.5, 0.125, 0.5}, -- NodeBox5
-			{-0.5, 0.0566037, 0.4375, 0.5, 0.0625, 0.5}, -- NodeBox6
-			{-0.5, -0.00707551, 0.4375, 0.5, 0, 0.5}, -- NodeBox7
-			{-0.5, -0.0707547, 0.4375, 0.5, -0.0625, 0.5}, -- NodeBox8
-			{-0.5, -0.130896, 0.4375, 0.5, -0.125, 0.5}, -- NodeBox9
-			{-0.5, -0.194576, 0.4375, 0.5, -0.1875, 0.5}, -- NodeBox10
-			{-0.5, -0.258255, 0.4375, 0.5, -0.25, 0.5}, -- NodeBox11
-			{-0.5, -0.318396, 0.4375, 0.5, -0.3125, 0.5}, -- NodeBox12
-			{-0.5, -0.5, 0.4375, 0.5, -0.4375, 0.5}, -- NodeBox13
-			{-0.5, -0.378538, 0.4375, 0.5, -0.375, 0.5}, -- NodeBox14
-			{-0.375, -0.49, 0.4575, -0.367925, 0.4375, 0.48}, -- NodeBox15
-			{0.367924, -0.49, 0.4575, 0.375, 0.5, 0.48}, -- NodeBox16
-			{0.375, 0.375, 0.375, 0.4375, 0.4375, 0.4375}, -- NodeBox17
-			{0.396226, -0.325, 0.4, 0.417453, 0.375, 0.42}, -- NodeBox18
-			},
-		},
-	selection_box = {
-		type = "fixed",
-		fixed = {
-			{-0.52, -0.5, 0.375, 0.52, 0.5, 0.5}
-			},
-		},
+	selection_box = wb2_cbox
 })
 
 local curtaincolors = {
-	"red",
-	"green",
-	"blue",
-	"white",
-	"pink",
-	"violet"
+	{ "red",    "#ad2323e0:175" },
+	{ "green",  "#27a927e0:175" },
+	{ "blue",   "#2626c6e0:175" },
+	{ "white",  "#ffffffe0:175" },
+	{ "pink",   "#ff8fb7e0:175" },
+	{ "violet", "#7f29d7e0:175" },
 }
 
 for c in ipairs(curtaincolors) do
-	local color = curtaincolors[c]
-	local color_d = S(curtaincolors[c])
+	local color = curtaincolors[c][1]
+	local hue = curtaincolors[c][2]
+	local color_d = S(curtaincolors[c][1])
 
 	homedecor.register("curtain_"..color, {
 		description = S("Curtains (%s)"):format(color_d),
-		tiles = { "homedecor_curtain_"..color..".png" },
-		inventory_image = "homedecor_curtain_"..color..".png",
-		wield_image = "homedecor_curtain_"..color..".png",
+		tiles = { "homedecor_curtain.png^[colorize:"..hue },
+		inventory_image = "homedecor_curtain.png^[colorize:"..hue,
+		wield_image = "homedecor_curtain.png^[colorize:"..hue,
 		drawtype = 'signlike',
-		sunlight_propagates = true,
 		use_texture_alpha = true,
 		walkable = false,
 		groups = { snappy = 3 },
 		sounds = default.node_sound_leaves_defaults(),
 		paramtype2 = 'wallmounted',
-		selection_box = {
-			type = "wallmounted",
-		},
+		selection_box = { type = "wallmounted" },
 	-- Open the curtains
 		on_rightclick = function(pos, node, clicker, itemstack)
 			local topnode = minetest.get_node({x=pos.x, y=pos.y+1.0, z=pos.z})
@@ -179,19 +136,16 @@ for c in ipairs(curtaincolors) do
 
 	homedecor.register("curtain_open_"..color, {
 		description = S("Curtains (%s)"):format(color_d),
-		tiles = { "homedecor_curtain_open_"..color..".png" },
-		inventory_image = "homedecor_curtain_open_"..color..".png",
-		wield_image = "homedecor_curtain_open_"..color..".png",
+		tiles = { "homedecor_curtain_open.png^[colorize:"..hue },
+		inventory_image = "homedecor_curtain_open.png^[colorize:"..hue,
+		wield_image = "homedecor_curtain_open.png^[colorize:"..hue,
 		drawtype = 'signlike',
-		sunlight_propagates = true,
 		use_texture_alpha = true,
 		walkable = false,
 		groups = { snappy = 3 },
 		sounds = default.node_sound_leaves_defaults(),
 		paramtype2 = 'wallmounted',
-		selection_box = {
-			type = "wallmounted",
-		},
+		selection_box = { type = "wallmounted" },
 	-- Close the curtains
 		on_rightclick = function(pos, node, clicker, itemstack)
 			local topnode = minetest.get_node({x=pos.x, y=pos.y+1.0, z=pos.z})
@@ -205,8 +159,8 @@ for c in ipairs(curtaincolors) do
 end
 
 local mats = {
-	{ "brass", "Brass", "homedecor_tile_brass2.png" },
-	{ "wrought_iron", "Wrought iron", "homedecor_tile_wrought_iron2.png" },
+	{ "brass", "Brass", "homedecor_generic_metal_brass.png" },
+	{ "wrought_iron", "Wrought iron", "homedecor_generic_metal_wrought_iron.png" },
 	{ "wood", "Wooden", "default_wood.png" }
 }
 
@@ -218,7 +172,6 @@ for i in ipairs(mats) do
 		tiles = { texture },
 		inventory_image  = "homedecor_curtainrod_"..material.."_inv.png",
 		description = "Curtain Rod ("..mat_name..")",
-		sunlight_propagates = true,
 		groups = { snappy = 3 },
 		node_box = {
 			type = "fixed",
@@ -239,6 +192,7 @@ homedecor.register("window_flowerbox", {
 		"homedecor_flowerbox_sides.png"
 	},
 	inventory_image = "homedecor_flowerbox_inv.png",
+	sounds = default.node_sound_stone_defaults(),
 	groups = { snappy = 3 },
 	node_box = {
 		type = "fixed",

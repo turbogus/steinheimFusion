@@ -325,8 +325,7 @@ end
 -- Primary mapgen spawner, for mods that can work with air checking enabled on
 -- a surface during the initial map read stage.
 
-function plantslib:generate_block_with_air_checking(dtime)
-
+function plantslib:generate_block_with_air_checking()
 	if #plantslib.blocklist_aircheck > 0 then
 
 		local minp =		plantslib.blocklist_aircheck[1][1]
@@ -339,17 +338,22 @@ function plantslib:generate_block_with_air_checking(dtime)
 
 		if not plantslib.surface_nodes_aircheck.blockhash then
 
-			local search_area = minetest.find_nodes_in_area(minp, maxp, plantslib.surfaceslist_aircheck)
+			if type(minetest.find_nodes_in_area_under_air) == "function" then -- use newer API call
+				plantslib.surface_nodes_aircheck.blockhash =
+					minetest.find_nodes_in_area_under_air(minp, maxp, plantslib.surfaceslist_aircheck)
+			else
+				local search_area = minetest.find_nodes_in_area(minp, maxp, plantslib.surfaceslist_aircheck)
 
-			-- search the generated block for air-bounded surfaces
+				-- search the generated block for air-bounded surfaces the slow way.
 
-			plantslib.surface_nodes_aircheck.blockhash = {}
+				plantslib.surface_nodes_aircheck.blockhash = {}
 
-			for i = 1, #search_area do
-			local pos = search_area[i]
-				local p_top = { x=pos.x, y=pos.y+1, z=pos.z }
-				if minetest.get_node(p_top).name == "air" then
-					plantslib.surface_nodes_aircheck.blockhash[#plantslib.surface_nodes_aircheck.blockhash + 1] = pos
+				for i = 1, #search_area do
+				local pos = search_area[i]
+					local p_top = { x=pos.x, y=pos.y+1, z=pos.z }
+					if minetest.get_node(p_top).name == "air" then
+						plantslib.surface_nodes_aircheck.blockhash[#plantslib.surface_nodes_aircheck.blockhash + 1] = pos
+					end
 				end
 			end
 			plantslib.actioncount_aircheck.blockhash = 1
@@ -375,8 +379,7 @@ end
 -- Secondary mapgen spawner, for mods that require disabling of
 -- checking for air during the initial map read stage.
 
-function plantslib:generate_block_no_aircheck(dtime)
-
+function plantslib:generate_block_no_aircheck()
 	if #plantslib.blocklist_no_aircheck > 0 then
 
 		local minp =		plantslib.blocklist_no_aircheck[1][1]
@@ -422,11 +425,42 @@ end)
 -- "Play" them back, populating them with new stuff in the process
 
 minetest.register_globalstep(function(dtime)
-	plantslib:generate_block_with_air_checking(dtime)
+	if dtime < 0.2 and    -- don't attempt to populate if lag is already too high
+	  (#plantslib.blocklist_aircheck > 0 or #plantslib.blocklist_no_aircheck > 0) then
+		plantslib.globalstep_start_time = minetest.get_us_time()
+		plantslib.globalstep_runtime = 0
+		while (#plantslib.blocklist_aircheck > 0 or #plantslib.blocklist_no_aircheck > 0)
+		  and plantslib.globalstep_runtime < 200000 do  -- 0.2 seconds, in uS.
+			if #plantslib.blocklist_aircheck > 0 then
+				plantslib:generate_block_with_air_checking()
+			end
+			if #plantslib.blocklist_no_aircheck > 0 then
+				plantslib:generate_block_no_aircheck()
+			end
+			plantslib.globalstep_runtime = minetest.get_us_time() - plantslib.globalstep_start_time
+		end
+	end
 end)
 
-minetest.register_globalstep(function(dtime)
-	plantslib:generate_block_no_aircheck(dtime)
+-- Play out the entire log all at once on shutdown
+-- to prevent unpopulated map areas
+
+minetest.register_on_shutdown(function()
+	print("[plants_lib] Stand by, playing out the rest of the aircheck mapblock log")
+	print("(there are "..#plantslib.blocklist_aircheck.." entries)...")
+	while true do
+		plantslib:generate_block_with_air_checking(0.1)
+		if #plantslib.blocklist_aircheck == 0 then return end
+	end
+end)
+
+minetest.register_on_shutdown(function()
+	print("[plants_lib] Stand by, playing out the rest of the no-aircheck mapblock log")
+	print("(there are "..#plantslib.blocklist_aircheck.." entries)...")
+	while true do
+		plantslib:generate_block_no_aircheck(0.1)
+		if #plantslib.blocklist_no_aircheck == 0 then return end
+	end
 end)
 
 -- The spawning ABM
@@ -483,7 +517,7 @@ function plantslib:spawn_on_surfaces(sd,sp,sr,sc,ss,sa)
 				  and pos.y >= biome.min_elevation
 				  and pos.y <= biome.max_elevation
 				  then
-					local walldir = plantslib:find_adjacent_wall(p_top, biome.verticals_list)
+					local walldir = plantslib:find_adjacent_wall(p_top, biome.verticals_list, biome.choose_random_wall)
 					if biome.alt_wallnode and walldir then
 						if n_top.name == "air" then
 							minetest.set_node(p_top, { name = biome.alt_wallnode, param2 = walldir })
@@ -555,7 +589,7 @@ function plantslib:grow_plants(opts)
 			local root_node = minetest.get_node({x=pos.x, y=pos.y-options.height_limit, z=pos.z})
 			local walldir = nil
 			if options.need_wall and options.verticals_list then
-				walldir = plantslib:find_adjacent_wall(p_top, options.verticals_list)
+				walldir = plantslib:find_adjacent_wall(p_top, options.verticals_list, options.choose_random_wall)
 			end
 			if n_top.name == "air" and (not options.need_wall or (options.need_wall and walldir))
 			  then
@@ -612,12 +646,24 @@ end
 -- function to decide if a node has a wall that's in verticals_list{}
 -- returns wall direction of valid node, or nil if invalid.
 
-function plantslib:find_adjacent_wall(pos, verticals)
+function plantslib:find_adjacent_wall(pos, verticals, randomflag)
 	local verts = dump(verticals)
-	if string.find(verts, minetest.get_node({ x=pos.x-1, y=pos.y, z=pos.z   }).name) then return 3 end
-	if string.find(verts, minetest.get_node({ x=pos.x+1, y=pos.y, z=pos.z   }).name) then return 2 end
-	if string.find(verts, minetest.get_node({ x=pos.x  , y=pos.y, z=pos.z-1 }).name) then return 5 end
-	if string.find(verts, minetest.get_node({ x=pos.x  , y=pos.y, z=pos.z+1 }).name) then return 4 end
+	if randomflag then
+		local walltab = {}
+		
+		if string.find(verts, minetest.get_node({ x=pos.x-1, y=pos.y, z=pos.z   }).name) then walltab[#walltab + 1] = 3 end
+		if string.find(verts, minetest.get_node({ x=pos.x+1, y=pos.y, z=pos.z   }).name) then walltab[#walltab + 1] = 2 end
+		if string.find(verts, minetest.get_node({ x=pos.x  , y=pos.y, z=pos.z-1 }).name) then walltab[#walltab + 1] = 5 end
+		if string.find(verts, minetest.get_node({ x=pos.x  , y=pos.y, z=pos.z+1 }).name) then walltab[#walltab + 1] = 4 end
+
+		if #walltab > 0 then return walltab[math.random(1, #walltab)] end
+
+	else
+		if string.find(verts, minetest.get_node({ x=pos.x-1, y=pos.y, z=pos.z   }).name) then return 3 end
+		if string.find(verts, minetest.get_node({ x=pos.x+1, y=pos.y, z=pos.z   }).name) then return 2 end
+		if string.find(verts, minetest.get_node({ x=pos.x  , y=pos.y, z=pos.z-1 }).name) then return 5 end
+		if string.find(verts, minetest.get_node({ x=pos.x  , y=pos.y, z=pos.z+1 }).name) then return 4 end
+	end
 	return nil
 end
 

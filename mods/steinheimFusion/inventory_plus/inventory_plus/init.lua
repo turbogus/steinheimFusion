@@ -1,65 +1,30 @@
 --[[
 
-Inventory Plus+ for Minetest
+Inventory Plus for Minetest
 
 Copyright (c) 2012 cornernote, Brett O'Donnell <cornernote@gmail.com>
-Copyright (c) 2013 Zeg9 <dazeg9@gmail.com>
-Source Code: https://github.com/Zeg9/minetest-inventory_plus
-License: GPLv3
+Source Code: https://github.com/cornernote/minetest-inventory_plus
+License: BSD-3-Clause https://raw.github.com/cornernote/minetest-inventory_plus/master/LICENSE
 
-]]--
-
---[[
-TODO:
- * Include a few button textures, especially for "abandoned" mods
-   -> Done: bags
-   -> Todo: home GUI, mobf settings (if it still exists),...
- * Limit the number of buttons displayed, and then:
- * Multiple button pages (inventory can only display 9 buttons, and creative 6)
- * Fallback to text if no image is present ?
 ]]--
 
 
 -- expose api
 inventory_plus = {}
 
--- tell that we are inventory++, not inventory_plus
--- ...so mods know if they can use our functions like remove_button
-inventory_plus.plusplus = true
-
 -- define buttons
 inventory_plus.buttons = {}
 
 -- default inventory page
-inventory_plus.default = minetest.setting_get("inventory_default") or "main"
-
--- original inventory formspec, per player
-inventory_plus.inventory = {}
+inventory_plus.default = minetest.setting_get("inventory_default") or "craft"
 
 -- register_button
-inventory_plus.register_button = function(player,name,...)
+inventory_plus.register_button = function(player,name,label)
 	local player_name = player:get_player_name()
 	if inventory_plus.buttons[player_name] == nil then
 		inventory_plus.buttons[player_name] = {}
 	end
-	for _, i in ipairs(inventory_plus.buttons[player_name]) do
-		if i == name then return end -- only register buttons once
-	end
-	table.insert(inventory_plus.buttons[player_name], name)
-end
-
-inventory_plus.remove_button = function(player,name)
-	local player_name = player:get_player_name()
-	if inventory_plus.buttons[player_name] == nil then
-		inventory_plus.buttons[player_name] = {}
-	end
-	local index = nil
-	for i, n in ipairs(inventory_plus.buttons[player_name]) do
-		if n == name then
-			index = i
-		end
-	end
-	table.remove(inventory_plus.buttons[player_name], index)
+	inventory_plus.buttons[player_name][name] = label
 end
 
 -- set_inventory_formspec
@@ -76,38 +41,62 @@ end
 
 -- get_formspec
 inventory_plus.get_formspec = function(player,page)
-	local get_buttons = function(ox,oy,mx) -- origin x, origin y, max x
-		if not inventory_plus.buttons[player:get_player_name()] then
-			return ""
+	local formspec = "size[8,7.5]"
+	
+	-- player inventory
+	formspec = formspec .. "list[current_player;main;0,3.5;8,4;]"
+
+	-- craft page
+	if page=="craft" then
+		formspec = formspec
+			.."button[0,0;2,0.5;main;Back]"
+			.."list[current_player;craftpreview;7,1;1,1;]"
+		if minetest.setting_getbool("inventory_craft_small") then
+			formspec = formspec.."list[current_player;craft;3,0;2,2;]"
+			player:get_inventory():set_width("craft", 2)
+			player:get_inventory():set_size("craft", 2*2)
+		else
+			formspec = formspec.."list[current_player;craft;3,0;3,3;]"
+			player:get_inventory():set_width("craft", 3)
+			player:get_inventory():set_size("craft", 3*3)
 		end
-		local formspec = ""
-		local x,y=ox,oy
-		for _, i in ipairs(inventory_plus.buttons[player:get_player_name()]) do
-			formspec = formspec .. "image_button["..x..","..y..";1,1;inventory_plus_"..i..".png;"..i..";]"
-			x=x+1
-			if x >= ox+mx then
-				y = y+1
-				x = ox
+	end
+	
+	-- creative page
+	if page=="creative" then
+		return player:get_inventory_formspec()
+			.."button[5,0;2,0.5;main;Back]"
+	end
+	
+	-- main page
+	if page=="main" then
+		-- buttons
+		local x,y=0,0
+		for k,v in pairs(inventory_plus.buttons[player:get_player_name()]) do
+			formspec = formspec .. "button["..x..","..y..";2,0.5;"..k..";"..v.."]"
+			x=x+2
+			if x == 8 then
+				x=0
+				y=y+1
 			end
 		end
-		return formspec
 	end
-	-- craft page
-	if page=="main" then
-		if minetest.setting_getbool("creative_mode") then
-			return player:get_inventory_formspec()
-				.. get_buttons(6,0,2)
-		else
-			return inventory_plus.inventory[player:get_player_name()]
-				.. get_buttons(0,0,3)
-		end
-	end
+	
+	return formspec
 end
 
 -- register_on_joinplayer
 minetest.register_on_joinplayer(function(player)
-	if inventory_plus.inventory[player:get_player_name()] == nil then
-		inventory_plus.inventory[player:get_player_name()] = player:get_inventory_formspec()
+	if minetest.setting_getbool("inventory_craft_small") then
+		player:get_inventory():set_width("craft", 2)
+		player:get_inventory():set_size("craft", 2*2)
+	else
+		player:get_inventory():set_width("craft", 3)
+		player:get_inventory():set_size("craft", 3*3)
+	end
+	inventory_plus.register_button(player,"craft","Craft")
+	if minetest.setting_getbool("creative_mode") then
+		inventory_plus.register_button(player,"creative_prev","Creative")
 	end
 	minetest.after(1,function()
 		inventory_plus.set_inventory_formspec(player,inventory_plus.get_formspec(player, inventory_plus.default))
@@ -118,22 +107,19 @@ end)
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	-- main
 	if fields.main then
-		if minetest.setting_getbool("creative_mode") then
-			minetest.after(0.01,function()
-				inventory_plus.set_inventory_formspec(player, inventory_plus.get_formspec(player,"main"))
-			end)
-		else
-			inventory_plus.set_inventory_formspec(player, inventory_plus.get_formspec(player,"main"))
-		end
+		inventory_plus.set_inventory_formspec(player, inventory_plus.get_formspec(player,"main"))
 		return
 	end
+	-- craft
+	if fields.craft then
+		inventory_plus.set_inventory_formspec(player, inventory_plus.get_formspec(player,"craft"))
+		return
+	end
+	-- creative
 	if fields.creative_prev or fields.creative_next then
 		minetest.after(0.01,function()
-			inventory_plus.set_inventory_formspec(player, inventory_plus.get_formspec(player,"main"))
+			inventory_plus.set_inventory_formspec(player, inventory_plus.get_formspec(player,"creative"))
 		end)
 		return
 	end
 end)
-
--- log that we started
-minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded from "..minetest.get_modpath(minetest.get_current_modname()))

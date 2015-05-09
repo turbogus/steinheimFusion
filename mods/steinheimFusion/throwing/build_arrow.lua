@@ -43,33 +43,45 @@ local THROWING_ARROW_ENTITY={
 THROWING_ARROW_ENTITY.on_step = function(self, dtime)
 	self.timer=self.timer+dtime
 	local pos = self.object:getpos()
-	local node = minetest.env:get_node(pos)
+	local node = minetest.get_node(pos)
 
 	if self.timer>0.2 then
-		local objs = minetest.env:get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 1)
+		local objs = minetest.get_objects_inside_radius({x=pos.x,y=pos.y,z=pos.z}, 1)
 		for k, obj in pairs(objs) do
 			if obj:get_luaentity() ~= nil then
 				if obj:get_luaentity().name ~= "throwing:arrow_build_entity" and obj:get_luaentity().name ~= "__builtin:item" then
-					if self.node ~= "" then
-						minetest.env:set_node(self.lastpos, {name=self.node})
-					end
 					self.object:remove()
+					if self.inventory and self.stack and not minetest.setting_getbool("creative_mode") then
+						self.inventory:remove_item("main", {name=self.stack:get_name()})
+					end
+					if self.stack then
+						minetest.add_item(self.lastpos, {name=self.stack:get_name()})
+					end
+					local toughness = 0.95
+					if math.random() < toughness then
+						minetest.add_item(self.lastpos, 'throwing:arrow_build')
+					else
+						minetest.add_item(self.lastpos, 'default:stick')
+					end
 				end
-			else
-				if self.node ~= "" then
-					minetest.env:set_node(self.lastpos, {name=self.node})
-				end
-				self.object:remove()
 			end
 		end
 	end
 
 	if self.lastpos.x~=nil then
 		if node.name ~= "air" then
-			if self.node ~= "" then
-				minetest.env:set_node(self.lastpos, {name=self.node})
-			end
 			self.object:remove()
+			if self.inventory and self.stack and not minetest.setting_getbool("creative_mode") then
+					self.inventory:remove_item("main", {name=self.stack:get_name()})
+			end
+			if self.stack then
+				if not string.find(node.name, "water") and not string.find(node.name, "lava") and not string.find(node.name, "torch") and self.stack:get_definition().type == "node" and self.stack:get_name() ~= "default:torch" then
+					minetest.place_node(self.lastpos, {name=self.stack:get_name()})
+				else
+					minetest.add_item(self.lastpos, {name=self.stack:get_name()})
+				end
+			end
+			minetest.add_item(self.lastpos, 'default:shovel_steel')
 		end
 	end
 	self.lastpos={x=pos.x, y=pos.y, z=pos.z}
@@ -81,5 +93,12 @@ minetest.register_craft({
 	output = 'throwing:arrow_build',
 	recipe = {
 		{'default:stick', 'default:stick', 'default:shovel_steel'},
+	}
+})
+
+minetest.register_craft({
+	output = 'throwing:arrow_build',
+	recipe = {
+		{'default:shovel_steel', 'default:stick', 'default:stick'},
 	}
 })

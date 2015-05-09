@@ -1,4 +1,12 @@
-local S = moreblocks.gettext
+--[[
+More Blocks: circular saw
+
+Copyright (c) 2011-2015 Calinou and contributors.
+Licensed under the zlib license. See LICENSE.md for more information.
+--]]
+
+local S = moreblocks.intllib
+
 circular_saw = {}
 
 circular_saw.known_stairs = setmetatable({}, {
@@ -279,11 +287,6 @@ function circular_saw.on_construct(pos)
 			"field[0.3,3.5;1,1;max_offered;" ..S("Max").. ":;${max_offered}]" ..
 			"button[1,3.2;1,1;Set;" ..S("Set").. "]" ..
 			"list[current_name;output;2.8,0;8,4;]" ..
-			
-			"bgcolor[#080808BB;true]"..
-			"background[5,5;1,1;circularsaw_bg.png;true]"..		-- ajouter par turbogus
-			"listcolors[#00000069;#5A5A5A;#141318;#30434C;#FFF]"..	-- ajouter par turbogus
-			
 			"list[current_player;main;1.5,5;8,4;]")
 
 	meta:set_int("anz", 0) -- No microblocks inside yet.
