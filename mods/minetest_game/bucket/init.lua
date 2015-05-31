@@ -170,6 +170,14 @@ bucket.register_liquid(
 	"Lava Bucket"
 )
 
+bucket.register_liquid(
+	"quicksands:sand_source",
+	"quicksands:sand_flowing",
+	"bucket:bucket_sand",
+	"quicksands_bucket_sand.png",
+	"Sand Bucket"
+)
+
 minetest.register_craft({
 	type = "fuel",
 	recipe = "bucket:bucket_lava",
